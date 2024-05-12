@@ -184,6 +184,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float deltaTime) {
+        assert deltaTime > 0;
         if (!lockMovement) player.update(deltaTime); // Added code
         if (!lockTime) updateGameTime(deltaTime); // Update the game clock // Added code
 
@@ -264,6 +265,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param posY The Y position of the menu option.
      */
     private void isHovering(float posX, float posY){
+        assert posX > 0 && posY > 0;
         int mouseX = Gdx.input.getX();
         int mouseY = game.screenHeight - Gdx.input.getY();
         Vector3 menuOpt = camera.project(new Vector3(posX, posY, 0));
@@ -283,9 +285,10 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param shadeOption Determines the shade of the menu option.
      */
     private void drawMenuOption(float posX, float posY, String text, int shadeOption){
+        assert posX > 0 && posY > 0 && text != null && shadeOption > -1  && shadeOption < 3;
         if (shadeOption == 0) isHovering(posX, posY);
         else if (shadeOption == 1) game.batch.setColor(Color.WHITE);
-        else if (shadeOption == 2) game.batch.setColor(shader);
+        else game.batch.setColor(shader);
         GlyphLayout layout = new GlyphLayout();
         layout.setText(popupFont, text);
         game.batch.draw(popupMenu, posX, posY, popupMenuWidth, popupMenuHeight);
@@ -401,6 +404,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void fadeOutStep(float delta){
+        assert delta > 0;
         if (fadeOut){
             if (fadeTime == 0) fadeTime = minShade;
             if (fadeTime <= 1) {
@@ -427,6 +431,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void drawWorldElements(float delta){
+        assert delta > 0;
         gameMap.update(delta);
         gameMap.render();
         game.batch.setProjectionMatrix(camera.combined);
@@ -458,6 +463,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void updateGameTime(float delta) {
+        assert delta > 0;
         // Start of added code
         timeElapsed += delta;
         currentHour = this.getTime();
@@ -549,6 +555,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     @Override
     public boolean touchDown(int touchX, int touchY, int pointer, int button){
+        assert touchX > 0 && touchY > 0 && touchX <= game.screenWidth && touchY <= game.screenHeight;
         touchY = game.screenHeight - touchY;
 
         if (_menu.isClicked(touchX, touchY)) { // Added code

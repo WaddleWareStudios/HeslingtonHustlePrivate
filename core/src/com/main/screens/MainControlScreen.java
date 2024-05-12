@@ -34,6 +34,7 @@ public class MainControlScreen implements Screen, InputProcessor {
      * @param game The main game object that this screen is a part of.
      */
     public MainControlScreen(Main game) {
+        assert game != null;
         this.game = game;
         font = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
 
@@ -89,6 +90,7 @@ public class MainControlScreen implements Screen, InputProcessor {
      */
     @Override
     public void render(float delta) {
+        assert delta > 0;
         ScreenUtils.clear(0.3f, 0.55f, 0.7f, 1);
         game.batch.setProjectionMatrix(game.defaultCamera.combined);
         game.batch.begin();
@@ -125,6 +127,7 @@ public class MainControlScreen implements Screen, InputProcessor {
      * @return true if the event was handled, false otherwise.
      */
     public boolean touchDown(int touchX, int touchY, int pointer, int button) {
+        assert touchX > 0 && touchX <= game.screenWidth && touchY > 0 && touchY <= game.screenHeight;
         touchY = (game.screenHeight - touchY);
 
         if (touchX >= backButtonX && touchX <= backButtonX + backButtonWidth &&
