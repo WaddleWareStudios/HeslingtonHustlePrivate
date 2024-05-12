@@ -47,7 +47,7 @@ public class EndScreen implements Screen, InputProcessor {
         titleText = "Game Over"; // Added code
         playAgainButton = new Texture("end_gui/play_button.png");
         font = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
-        leaderboards = new Leaderboards(); // Added code
+        leaderboards = new Leaderboards("Leaderboards.csv"); // Added code
         playAgain = new Button(); // Added code
         this.streaks = streaks; // Added code
         initDimensions(); // Added code
