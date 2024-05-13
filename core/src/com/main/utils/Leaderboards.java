@@ -111,7 +111,7 @@ public class Leaderboards {
     /**
      * Writes the current entries array to the CSV file.
      */
-    private void writeToFile() {
+    public void writeToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < entryCount; i++) {
                 Entry entry = entries[i];
