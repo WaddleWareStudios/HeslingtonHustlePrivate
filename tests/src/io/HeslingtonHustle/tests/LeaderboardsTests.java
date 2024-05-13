@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
 Tests the Leaderboards class
  */
-public class LeaderBoardTests
+public class LeaderboardsTests
 {
     private Leaderboards leaderboards;
 
