@@ -42,6 +42,7 @@ public class EndScreen implements Screen, InputProcessor {
      * @param userScore The user's score achieved in the game.
      */
     public EndScreen(Main game, int userScore, String streaks) { // Added code
+        assert streaks != null && game != null;
         this.game = game; // Added code
         this.userScore = userScore; // Added code
         titleText = "Game Over"; // Added code
@@ -83,6 +84,7 @@ public class EndScreen implements Screen, InputProcessor {
      */
     @Override
     public void render(float delta) {
+        assert delta > 0;
         if (exitFlag) return;
         ScreenUtils.clear(0.3f, 0.55f, 0.7f, 1);
         game.batch.setProjectionMatrix(game.defaultCamera.combined);
@@ -267,6 +269,7 @@ public class EndScreen implements Screen, InputProcessor {
      */
     @Override
     public boolean touchDown(int touchX, int touchY, int pointer, int button) {
+        assert touchX > 0 && touchY > 0 && touchY <= game.screenHeight && touchX <= game.screenWidth;
         touchY = game.screenHeight - touchY;
 
         // Check if play again button is clicked
