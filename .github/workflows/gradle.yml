@@ -37,17 +37,22 @@ jobs:
     - name: Build with gradle
       uses: gradle/gradle-build-action@v3.3.2
       with:
-        arguments: build jacocoTestReport  
+        arguments: build dist jacocoTestReport  
     - name: Upload runnable JAR
       uses: actions/upload-artifact@v4.3.3
       with:
-        name: desktop.jar
+        name: upload desktop.jar
         path: desktop/build/libs/desktop.jar
+    - name: upload gradle testing report
+      uses: actions/upload-artifact@4.3.3
+      with:
+        name: gradle-test-report
+        path: tests/build/reports/tests/test
     - name: upload jacoco coverage report
       uses: actions/upload-artifact@v4.3.3
       with:
-        name: jacoco-report
-        path: tests/build/reports/tests/test
+        name: jacoco-test-report
+        path: tests/build/reports/jacoco/test/html
 
   release:
     runs-on: ubuntu-latest
