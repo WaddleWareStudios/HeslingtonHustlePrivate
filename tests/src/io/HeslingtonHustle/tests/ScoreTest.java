@@ -111,7 +111,7 @@ public class ScoreTest {
     }
 
     /**
-     * Test correct score and streaks are calculated after a full game run through
+     * Test correct score is calculated after a full game run through
      */
     @Test
     public void testFUllGameScore() {
@@ -134,9 +134,11 @@ public class ScoreTest {
         total_score += score.checkStreaks();
 
         assertEquals(440, total_score);
-        assertEquals("Programmer\nAthlete\nEarly Nights\n", score.getStreaks());
     }
 
+    /**
+     * Test score is set to 0 after player fails to study for 2 days
+     */
     @Test
     public void testFailedGameScore() {
         int total_score = 0;
@@ -165,5 +167,32 @@ public class ScoreTest {
         
         assertEquals(0, total_score);
         assertTrue(hasFailed);
+    }
+
+
+    /**
+     * Tests that the streaks are correctly awarded
+     */
+    @Test
+    public void testStreaks() {
+        for(int day = 0; day < 7; day++) {
+            score.study(1, "Comp_sci_door");
+            score.study(1, "Piazza");
+            score.doRecActivity(1, "Feed_ducks");
+            score.doRecActivity(1, "Gym_door");
+            score.doRecActivity(1, "Visit_city");
+            score.doRecActivity(1, "Ron_cooke_door");
+            score.incrementSleep();
+            score.resetDailyCounters();
+        }
+        score.checkStreaks();
+
+        assertEquals("WaddleWare Representative\n" +
+                        "Programmer\n" +
+                        "Athlete\n" +
+                        "Early Nights\n" +
+                        "All Rounder\n" +
+                        "Daily Routine\n",
+                score.getStreaks());
     }
 }
