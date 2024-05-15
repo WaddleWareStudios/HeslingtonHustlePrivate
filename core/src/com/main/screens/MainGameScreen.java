@@ -501,6 +501,9 @@ public class MainGameScreen implements Screen, InputProcessor {
         if (!hasFailed) {
             totalScore += dailyScore.calculateScore();
         }
+        else {
+            totalScore = 0;
+        }
         dailyScore.resetDailyCounters();
     }
     // End of added Code
@@ -660,7 +663,9 @@ public class MainGameScreen implements Screen, InputProcessor {
                         // Start of added Code
                         if (dayNum == 7) {
                             addDailyScore();
-                            totalScore += dailyScore.checkStreaks(); // Add bonus points from achieving streaks
+                            if (!hasFailed) {
+                                totalScore += dailyScore.checkStreaks(); // Add bonus points from achieving streaks
+                            }
                             game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, dailyScore.getStreaks());
                         } else {
                             dailyScore.incrementSleep(); //increments count for number of early nights

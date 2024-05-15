@@ -152,12 +152,17 @@ public class ScoreTest {
                 }
             }
 
-            total_score += score.calculateScore();
+            if (!hasFailed) {
+                total_score += score.calculateScore();
+            }
+            else {
+                total_score = 0;
+            }
             score.resetDailyCounters();
-
-            System.out.println(total_score);
         }
+
         total_score += score.checkStreaks();
+        
         assertEquals(0, total_score);
         assertTrue(hasFailed);
     }
