@@ -41,7 +41,7 @@ jobs:
     - name: Upload runnable JAR
       uses: actions/upload-artifact@v4.3.3
       with:
-        name: upload desktop.jar
+        name: desktop.jar
         path: desktop/build/libs/desktop.jar
     - name: upload gradle testing report
       uses: actions/upload-artifact@4.3.3
