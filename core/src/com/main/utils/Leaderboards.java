@@ -90,7 +90,7 @@ public class Leaderboards {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             // Read each line from file
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null && entryCount < MAX_ENTRIES) {
                 if (line.isEmpty()) {
                     break;
                 }
