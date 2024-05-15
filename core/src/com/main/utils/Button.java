@@ -30,7 +30,7 @@ public class Button {
      * @param height The height of the button.
      */
     public void init(float xCoord, float yCoord, float width, float height) {
-        if(width == 0 && height == 0) {
+        if(width == 0 || height == 0) {
             System.out.print("Attempted to initalise an instance of button class with a height or width of zero\n");
             System.exit(1);
         }

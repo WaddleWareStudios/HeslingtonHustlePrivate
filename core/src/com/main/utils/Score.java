@@ -89,8 +89,8 @@ public class Score {
      * Adds a recreational activity and the location where it took place.
      * @param location The location where the recreational activity was done.
      */
-    public void doRecActivity(String location) {
-        recreationCount++;
+    public void doRecActivity(int hours, String location) {
+        recreationCount += hours;
         recreationLocations.add(location);
     }
 

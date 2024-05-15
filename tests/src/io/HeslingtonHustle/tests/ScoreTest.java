@@ -60,8 +60,8 @@ public class ScoreTest {
      */
     @Test
     public void testDoRecActivity() {
-        score.doRecActivity("Feed the Ducks");
-        assertEquals(1, score.getRecreationCount());
+        score.doRecActivity(3, "Feed the Ducks");
+        assertEquals(3, score.getRecreationCount());
 
         String[] recLocations =  score.getRecreationLocations().toArray(new String[0]);
         assertEquals("Feed the Ducks", recLocations[0]);
@@ -74,9 +74,9 @@ public class ScoreTest {
     public void testCalculateScore() {
         score.study(4, "Comp_sci_door");
         score.eat(12);
-        score.doRecActivity("Feed the Ducks");
+        score.doRecActivity(2, "Feed the Ducks");
 
-        assertEquals(27, score.calculateScore());
+        assertEquals(31, score.calculateScore());
     }
 
     /**
@@ -86,7 +86,7 @@ public class ScoreTest {
     public void testResetDailyCounters() {
         score.study(3, "Comp_sci_door");
         score.eat(12);
-        score.doRecActivity("Feed the Ducks");
+        score.doRecActivity(4, "Feed the Ducks");
 
         score.resetDailyCounters();
 
@@ -103,10 +103,62 @@ public class ScoreTest {
     public void testMultipleActivities() {
         score.study(3, "Comp_sci_door");
         score.eat(12);
-        score.doRecActivity("Feed the Ducks");
+        score.doRecActivity(1, "Feed the Ducks");
 
         assertEquals(3, score.getStudyCount());
         assertEquals(1, score.getMealCount());
         assertEquals(1, score.getRecreationCount());
+    }
+
+    /**
+     * Test correct score and streaks are calculated after a full game run through
+     */
+    @Test
+    public void testFUllGameScore() {
+        int total_score = 0;
+
+        for (int day = 0; day < 7; day++) {
+            score.study(3, "Comp_sci_door");
+            score.study(1, "Piazza");
+            score.doRecActivity(2, "Feed the Ducks");
+            score.doRecActivity(3, "Gym_door");
+            score.eat(9);
+            score.eat(1);
+            score.eat(6);
+            score.incrementSleep();
+
+            total_score += score.calculateScore();
+            score.resetDailyCounters();
+        }
+
+        total_score += score.checkStreaks();
+
+        assertEquals(440, total_score);
+        assertEquals("Programmer\nAthlete\nEarly Nights\n", score.getStreaks());
+    }
+
+    @Test
+    public void testFailedGameScore() {
+        int total_score = 0;
+        boolean hasFailed = false;
+
+        for (int day = 0; day < 7; day++) {
+            if (day != 2 && day != 4) {
+                score.study(3, "Piazza_door");
+            }
+            if (score.hasMissedStudy()) { //check if player has already missed study for a day
+                if (score.getStudyCount() == 0) { //check if the player hasn't studied today
+                    hasFailed = true;
+                }
+            }
+
+            total_score += score.calculateScore();
+            score.resetDailyCounters();
+
+            System.out.println(total_score);
+        }
+        total_score += score.checkStreaks();
+        assertEquals(0, total_score);
+        assertTrue(hasFailed);
     }
 }

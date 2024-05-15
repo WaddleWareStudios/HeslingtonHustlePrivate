@@ -500,8 +500,8 @@ public class MainGameScreen implements Screen, InputProcessor {
         }
         if (!hasFailed) {
             totalScore += dailyScore.calculateScore();
-            dailyScore.resetDailyCounters();
         }
+        dailyScore.resetDailyCounters();
     }
     // End of added Code
 
@@ -629,7 +629,7 @@ public class MainGameScreen implements Screen, InputProcessor {
                             timeElapsed += duration * SECONDS_PER_GAME_HOUR;
 
                             // Added Code //
-                            dailyScore.doRecActivity(getDoorTouching());
+                            dailyScore.doRecActivity(duration, getDoorTouching());
                             // Added Code //
 
                             duration = 1;
