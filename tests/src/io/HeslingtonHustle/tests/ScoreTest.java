@@ -6,6 +6,8 @@ import com.main.utils.Score;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * Tests the Score class
  */
@@ -36,6 +38,9 @@ public class ScoreTest {
     public void testStudy() {
         score.study(3, "Comp_sci_door");
         assertEquals(3, score.getStudyCount());
+
+        String[] studLocations =  score.getStudyLocations().toArray(new String[0]);
+        assertEquals("Comp_sci_door", studLocations[0]);
     }
 
     /**
@@ -45,6 +50,9 @@ public class ScoreTest {
     public void testEat() {
         score.eat(12); // Eat at 12pm
         assertEquals(1, score.getMealCount());
+
+        List<Integer> mealTimes = score.getMealTimes();
+        assertEquals((Integer) 12, mealTimes.get(0));
     }
 
     /**
@@ -54,6 +62,9 @@ public class ScoreTest {
     public void testDoRecActivity() {
         score.doRecActivity("Feed the Ducks");
         assertEquals(1, score.getRecreationCount());
+
+        String[] recLocations =  score.getRecreationLocations().toArray(new String[0]);
+        assertEquals("Feed the Ducks", recLocations[0]);
     }
 
     /**
