@@ -257,6 +257,8 @@ public class Score {
         return studyCount;
     }
 
+    public Set<String> getStudyLocations() { return studyLocations; }
+
     /**
      * Returns the current number of meals eaten.
      * @return The current number of meals eaten.
@@ -265,6 +267,8 @@ public class Score {
         return mealCount;
     }
 
+    public List<Integer> getMealTimes() { return mealTimes; }
+
     /**
      * Returns the current number of recreational activities completed.
      * @return The current number of recreational activities completed.
@@ -272,6 +276,8 @@ public class Score {
     public int getRecreationCount() {
         return recreationCount;
     }
+
+    public Set<String> getRecreationLocations() { return recreationLocations; }
 
     /**
      * Returns the missedStudy boolean

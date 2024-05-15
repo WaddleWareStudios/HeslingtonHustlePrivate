@@ -141,6 +141,7 @@ public class LeaderboardsTests
      */
     @Test
     public void testRegisterResult_existingScoreLower() {
+        leaderboards.registerResult(200, "James");
         leaderboards.registerResult(50, "James");
         Leaderboards.Entry[] entry = leaderboards.getEntries();
 
@@ -150,20 +151,30 @@ public class LeaderboardsTests
     }
 
     /**
-     * Test that registerResult method successfully orders 10 scores that are added to the leaderboard. 
+     * Test that registerResult method successfully puts new score in the correct position.
      */
     @Test
     public void testRegisterResult_10ScoresOrdered() {
-        Random random = new Random();
-
+        int score = 10;
         for (int i=1; i < 11; i++) {
-            leaderboards.registerResult(random.nextInt(100), "Player" + i);
+            leaderboards.registerResult(score, "Player" + i);
+            score += 5;
         }
 
+        leaderboards.registerResult(42, "James");
+        Leaderboards.Entry[] entry = leaderboards.getEntries();
+
+        assertEquals("James", entry[3].name);
+        assertEquals((Integer) 42, entry[3].score);
+        assertEquals("Player2", entry[9].name);
+        assertEquals((Integer) 15, entry[9].score);
+
+
+        //test that leaderboard is all ordered correctly.
         int prevScore = 9999999; //arbitrary large value
-        for (Leaderboards.Entry entry : leaderboards.getEntries()) {
-            assertTrue("Failed as "+entry.score+" is greater than "+prevScore, entry.score <= prevScore);
-            prevScore = entry.score;
+        for (Leaderboards.Entry e : leaderboards.getEntries()) {
+            assertTrue("Failed as "+e.score+" is greater than "+prevScore, e.score <= prevScore);
+            prevScore = e.score;
         }
     }
 }
