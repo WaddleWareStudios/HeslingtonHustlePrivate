@@ -77,21 +77,17 @@ public class ButtonTest {
     /**
      * Tests initialising a Button with zero width.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testZeroWidth() {
         button.init(10, 20, 0, 50);
-        assertEquals(0, button.width(), 0.0);
-        assertFalse(button.isClicked(10, 20)); // Clicks top left corner
     }
 
     /**
      * Tests initialising a Button with zero height.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testZeroHeight() {
         button.init(10, 20, 100, 0);
-        assertEquals(0, button.height(), 0.0);
-        assertFalse(button.isClicked(10, 20)); // Clicks top left corner
     }
 
     /**
