@@ -44,7 +44,7 @@ jobs:
         name: desktop.jar
         path: desktop/build/libs/desktop.jar
     - name: upload gradle testing report
-      uses: actions/upload-artifact@4.3.3
+      uses: actions/upload-artifact@v4.3.3
       with:
         name: gradle-test-report
         path: tests/build/reports/tests/test
