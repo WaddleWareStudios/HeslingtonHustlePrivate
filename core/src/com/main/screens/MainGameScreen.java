@@ -58,7 +58,7 @@ public class MainGameScreen implements Screen, InputProcessor {
     private float timeElapsed, fadeTime, minShade;
     private boolean fadeOut, lockTime, lockMovement, lockPopup, resetPos, popupVisible, showMenu;
 
-    private final Energy NRG;
+    private final EnergyTexture energy;
     /**
      * Constructs the main game screen with necessary game components.
      * Initializes game map, player, camera, UI elements, and sets the initial game state.
@@ -86,7 +86,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         this._durationUp = new Button(); // Added code
         this._durationDown = new Button(); // Added code
         this._menuBack = new Button(); // Added code
-        this.NRG = new Energy(game);
+        this.energy = new EnergyTexture(game);
 
         // Initialize non-final attributes
         this.activity = "";
@@ -446,7 +446,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         if (showMenu) drawDurationMenu();
         game.batch.begin();
         game.batch.draw(menuButton, _menu.x(), _menu.y(), _menu.width(), _menu.height()); // Added code
-        NRG.draw(game);
+        energy.draw(game);
         game.batch.draw(counterBackground, counterBackgroundX, counterBackgroundY, counterBackgroundWidth, counterBackgroundHeight);
         font.draw(game.batch, counterString, game.screenWidth - 320 * game.scaleFactorX, game.screenHeight - 40 * game.scaleFactorY);
         game.batch.end();
@@ -510,7 +510,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         currentHour = 8;
         dayNum++;
         timeElapsed = 0;
-        NRG.increaseEnergy(4);
+        energy.increaseEnergy(4);
 
         addDailyScore(); // Added code
     }
@@ -567,7 +567,7 @@ public class MainGameScreen implements Screen, InputProcessor {
                         showMenu = false;
                         lockMovement = fadeOut;
                         studyHours += duration;
-                        if (NRG.getCounter() > (duration+1)/2) NRG.decreaseEnergy((duration+1)/2);
+                        if (energy.getEnergy() > (duration+1)/2) energy.decreaseEnergy((duration+1)/2);
 
                         // Start of added code
                         timeElapsed += duration * SECONDS_PER_GAME_HOUR;
@@ -598,12 +598,12 @@ public class MainGameScreen implements Screen, InputProcessor {
                     }
                     else if (_activity.isClicked(touchX,touchY)) {
                         game.gameData.buttonClickedSoundActivate();
-                        if (NRG.getCounter() >= duration) {
+                        if (energy.getEnergy() >= duration) {
                             executeFadeOut(false);
                             showMenu = false;
                             lockMovement = fadeOut;
                             recActivity++;
-                            NRG.decreaseEnergy(duration);
+                            energy.decreaseEnergy(duration);
                             timeElapsed += duration * SECONDS_PER_GAME_HOUR;
 
                             // Added Code //
@@ -678,7 +678,7 @@ public class MainGameScreen implements Screen, InputProcessor {
                     else if (touchX >= eatOpt.x && touchX <= eatOpt.x + popupMenuWidth * zoom && touchY >= eatOpt.y && touchY <= eatOpt.y + popupMenuHeight * zoom) {
                         game.gameData.buttonClickedSoundActivate();
                         game.gameData.eatingSoundActivate();
-                        NRG.increaseEnergy(3);
+                        energy.increaseEnergy(3);
                         mealCount++;
                         dailyScore.eat(getTime()); // Added code
                     }
@@ -731,7 +731,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int i, int i1) {
-        initDimensions(); NRG.onResize(game);// Added code
+        initDimensions(); energy.onResize(game);// Added code
     }
 
     @Override
@@ -762,7 +762,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         menuStudyButton.dispose();
         menuSleepButton.dispose();
         menuGoButton.dispose();
-        NRG.disposeTexture();
+        energy.disposeTexture();
         player.dispose();
         font.dispose();
         popupFont.dispose();
