@@ -1,9 +1,5 @@
 package com.main.utils;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.main.Main;
-
 public class Energy {
 
     private Integer counter;

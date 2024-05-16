@@ -26,7 +26,20 @@ public class EnergyTest {
     }
 
     @Test
-    public void updateTexture() {
+    public void increaseEnergyTest() {
+        energy.decreaseEnergy(4);
+        energy.increaseEnergy(2);
+        assertEquals((Integer) 8, energy.getEnergy());
+        energy.increaseEnergy(2);
+        assertEquals((Integer) 10, energy.getEnergy());
+    }
 
+    @Test
+    public void updateTextureNameTest() {
+        assertEquals("energy/energy_10.png", energy.getTextureName());
+        energy.decreaseEnergy(4);
+        assertEquals("energy/energy_6.png", energy.getTextureName());
+        energy.increaseEnergy(2);
+        assertEquals("energy/energy_8.png", energy.getTextureName());
     }
 }
