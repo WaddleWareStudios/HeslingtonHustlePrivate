@@ -48,18 +48,17 @@ public class MainGameScreen implements Screen, InputProcessor {
     // Added Code //
 
     // Non-final attributes
-    private Texture energyBar;
     private float counterBackgroundY, counterBackgroundX, counterBackgroundWidth, counterBackgroundHeight;
     private float popupMenuWidth, popupMenuHeight;
     private float durationMenuBackgroundX, durationMenuBackgroundY; // Added code
     private float durationMenuBackgroundWidth, durationMenuBackgroundHeight; // Added code
     private float durationTextY, menuTitleY, hoursLabelY;
-    private float energyBarY, energyBarX, energyBarWidth, energyBarHeight;
     private String activity, popupMenuType;
-    private int energyCounter, duration, dayNum, recActivity, studyHours, mealCount, currentHour, totalScore; // Added code
+    private int duration, dayNum, recActivity, studyHours, mealCount, currentHour, totalScore; // Added code
     private float timeElapsed, fadeTime, minShade;
     private boolean fadeOut, lockTime, lockMovement, lockPopup, resetPos, popupVisible, showMenu;
 
+    private final Energy NRG;
     /**
      * Constructs the main game screen with necessary game components.
      * Initializes game map, player, camera, UI elements, and sets the initial game state.
@@ -87,11 +86,11 @@ public class MainGameScreen implements Screen, InputProcessor {
         this._durationUp = new Button(); // Added code
         this._durationDown = new Button(); // Added code
         this._menuBack = new Button(); // Added code
+        this.NRG = new Energy(game);
 
         // Initialize non-final attributes
         this.activity = "";
         this.popupMenuType = "";
-        this.energyCounter = 10;
         this.duration = 1;
         this.dayNum = 1;
         this.timeElapsed = 0f;
@@ -114,7 +113,6 @@ public class MainGameScreen implements Screen, InputProcessor {
         this.popupFont = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
         this.durationFont = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
         this.shapeRenderer = new ShapeRenderer();
-        this.energyBar = setEnergyBar();
 
         this.initDimensions(); // Added code
         this.popupFont.getData().setScale(0.4f, 0.4f);
@@ -159,16 +157,12 @@ public class MainGameScreen implements Screen, InputProcessor {
                 150 * scaleX,
                 75 * scaleY
         );
-        energyBarWidth = 200 * scaleX;
-        energyBarHeight = 64 * scaleY;
         counterBackgroundWidth = 370 * scaleX;
         counterBackgroundHeight = 150 * scaleY;
         durationMenuBackgroundWidth = 500 * scaleX;
         durationMenuBackgroundHeight = 500 * scaleY;
         font.getData().setScale(scaleX, scaleY);
         durationFont.getData().setScale(3f * scaleX, 3f * scaleY);
-        energyBarX = 30 * scaleX + this._menu.width();
-        energyBarY = screenHeight - energyBarHeight - 10 * scaleY;
         counterBackgroundX = screenWidth - counterBackgroundWidth;
         counterBackgroundY = screenHeight - counterBackgroundHeight;
         durationMenuBackgroundX = screenWidth/2f - durationMenuBackgroundWidth/2f;
@@ -452,7 +446,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         if (showMenu) drawDurationMenu();
         game.batch.begin();
         game.batch.draw(menuButton, _menu.x(), _menu.y(), _menu.width(), _menu.height()); // Added code
-        game.batch.draw(energyBar, energyBarX, energyBarY, energyBarWidth, energyBarHeight);
+        NRG.draw(game);
         game.batch.draw(counterBackground, counterBackgroundX, counterBackgroundY, counterBackgroundWidth, counterBackgroundHeight);
         font.draw(game.batch, counterString, game.screenWidth - 320 * game.scaleFactorX, game.screenHeight - 40 * game.scaleFactorY);
         game.batch.end();
@@ -516,10 +510,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         currentHour = 8;
         dayNum++;
         timeElapsed = 0;
-        energyCounter += 4;
-        if (energyCounter > 10) energyCounter = 10;
-        energyBar.dispose();
-        energyBar = setEnergyBar();
+        NRG.increaseEnergy(4);
 
         addDailyScore(); // Added code
     }
@@ -533,18 +524,6 @@ public class MainGameScreen implements Screen, InputProcessor {
         game.batch.begin();
         font.draw(game.batch, timeString, game.screenWidth - 320 * game.scaleFactorX, game.screenHeight - 15 * game.scaleFactorY);
         game.batch.end();
-    }
-
-    /**
-     * Sets the texture for the energy bar based on the current energy level.
-     * @return The texture of the current energy bar.
-     */
-    public Texture setEnergyBar() {
-        if (energyCounter > 0) {
-            return new Texture("energy/energy_" + energyCounter + ".png");
-        } else {
-            return new Texture("energy/energy_0.png");
-        }
     }
 
     /**
@@ -588,9 +567,7 @@ public class MainGameScreen implements Screen, InputProcessor {
                         showMenu = false;
                         lockMovement = fadeOut;
                         studyHours += duration;
-                        if (energyCounter > (duration+1)/2) energyCounter -= (duration+1)/2;
-                        energyBar.dispose();
-                        energyBar = setEnergyBar();
+                        if (NRG.getCounter() > (duration+1)/2) NRG.decreaseEnergy((duration+1)/2);
 
                         // Start of added code
                         timeElapsed += duration * SECONDS_PER_GAME_HOUR;
@@ -621,14 +598,12 @@ public class MainGameScreen implements Screen, InputProcessor {
                     }
                     else if (_activity.isClicked(touchX,touchY)) {
                         game.gameData.buttonClickedSoundActivate();
-                        if (energyCounter >= duration) {
+                        if (NRG.getCounter() >= duration) {
                             executeFadeOut(false);
                             showMenu = false;
                             lockMovement = fadeOut;
                             recActivity++;
-                            energyCounter -= duration;
-                            energyBar.dispose();
-                            energyBar = setEnergyBar();
+                            NRG.decreaseEnergy(duration);
                             timeElapsed += duration * SECONDS_PER_GAME_HOUR;
 
                             // Added Code //
@@ -703,13 +678,9 @@ public class MainGameScreen implements Screen, InputProcessor {
                     else if (touchX >= eatOpt.x && touchX <= eatOpt.x + popupMenuWidth * zoom && touchY >= eatOpt.y && touchY <= eatOpt.y + popupMenuHeight * zoom) {
                         game.gameData.buttonClickedSoundActivate();
                         game.gameData.eatingSoundActivate();
-                        energyCounter += 3;
+                        NRG.increaseEnergy(3);
                         mealCount++;
                         dailyScore.eat(getTime()); // Added code
-
-                        if (energyCounter > 10) energyCounter = 10;
-                        energyBar.dispose();
-                        energyBar = setEnergyBar();
                     }
                     break;
 
@@ -760,7 +731,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int i, int i1) {
-        initDimensions(); // Added code
+        initDimensions(); NRG.onResize(game);// Added code
     }
 
     @Override
@@ -791,7 +762,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         menuStudyButton.dispose();
         menuSleepButton.dispose();
         menuGoButton.dispose();
-        energyBar.dispose();
+        NRG.disposeTexture();
         player.dispose();
         font.dispose();
         popupFont.dispose();
