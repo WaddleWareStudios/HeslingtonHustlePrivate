@@ -31,10 +31,6 @@ public class Energy
     {
         game.batch.draw(energyTexture, energyBarX, energyBarY, energyBarWidth, energyBarHeight);
     }
-    public Texture getEnergyTexture()
-    {
-        return energyTexture;
-    }
     private void updateTexture()
     {
         energyTexture.dispose();
