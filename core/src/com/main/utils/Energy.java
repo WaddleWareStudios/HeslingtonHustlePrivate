@@ -1,8 +1,8 @@
 package com.main.utils;
 
 /**
- * Represents the energy system for the game, where energy levels are managed
- * and visualised. The energy level has a max cap of 10 and a minimum of 0.
+ * Represents the energy system for the game, where energy levels are managed.
+ * The energy level has a max cap of 10 and a minimum of 0.
  */
 public class Energy {
 

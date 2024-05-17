@@ -206,7 +206,7 @@ public class Score {
         }
         if (allRounder) {
             streaks += "All Rounder\n";
-            streakBonus += 3;
+            streakBonus += 5;
         }
         if (daysVisitAll == 7) {
             streaks += "Daily Routine\n";

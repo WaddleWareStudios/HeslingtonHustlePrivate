@@ -194,5 +194,7 @@ public class ScoreTest {
                         "All Rounder\n" +
                         "Daily Routine\n",
                 score.getStreaks());
+
+        assertEquals( 50, score.checkStreaks());
     }
 }

@@ -26,7 +26,7 @@ public class ButtonTest {
      * Tests whether the button's properties are set properly after initialisation.
      */
     @Test
-    public void testInitialisation() {
+    public void testButtonInitialisation() {
         assertEquals(10, button.x(), 0.0);
         assertEquals(20, button.y(), 0.0);
         assertEquals(100, button.width(), 0.0);
