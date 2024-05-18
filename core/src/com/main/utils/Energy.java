@@ -1,6 +1,7 @@
 package com.main.utils;
 
 /**
+ * NEW FOR ASSESSMENT 2
  * Represents the energy system for the game, where energy levels are managed.
  * The energy level has a max cap of 10 and a minimum of 0.
  */

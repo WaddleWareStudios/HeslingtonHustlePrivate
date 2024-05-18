@@ -26,7 +26,7 @@ public class TimeTest {
      */
     @Test
     public void testInitialTime() {
-        assertEquals(0, time.getTimeEl(), 0.001);
+        assertEquals(0, time.getTimeElapsed(), 0.001);
     }
 
     /**
@@ -37,7 +37,7 @@ public class TimeTest {
     public void testReset() {
         time.incTimeElapsed(10);
         time.reset();
-        assertEquals(0, time.getTimeEl(), 0.001);
+        assertEquals(0, time.getTimeElapsed(), 0.001);
     }
 
     /**
@@ -47,9 +47,9 @@ public class TimeTest {
     @Test
     public void testIncrementTimeElapsed() {
         time.incTimeElapsed(5);
-        assertEquals(5, time.getTimeEl(), 0.001);
+        assertEquals(5, time.getTimeElapsed(), 0.001);
         time.incTimeElapsed(15);
-        assertEquals(20, time.getTimeEl(), 0.001);
+        assertEquals(20, time.getTimeElapsed(), 0.001);
     }
 
     /**
@@ -69,6 +69,6 @@ public class TimeTest {
     @Test
     public void testNegativeTimeIncrement() {
         time.incTimeElapsed(-5);
-        assertEquals(0, time.getTimeEl(), 0.001);
+        assertEquals(0, time.getTimeElapsed(), 0.001);
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.main.Main;
 
 /**
+ * NEW FOR ASSESSMENT 2
  * Handles the integration of the Energy class and visualisation of the energy.
  * Inherits from Energy.
  */

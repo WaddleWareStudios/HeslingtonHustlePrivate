@@ -390,7 +390,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         lockPopup = true;
         showMenu = false;
         this.resetPos = resetPos;
-        minShade = time.getTimeEl()/ SECONDS_PER_GAME_HOUR > 11 ? (time.getTimeEl() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR) : 0; // Added code
+        minShade = time.getTimeElapsed()/ SECONDS_PER_GAME_HOUR > 11 ? (time.getTimeElapsed() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR) : 0; // Added code
     }
 
     /**
@@ -433,7 +433,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         game.batch.draw(player.getCurrentFrame(), player.worldX, player.worldY, Player.SPRITE_X, Player.SPRITE_Y); // Added code
         if (!lockPopup) drawPopUpMenu();
         game.batch.end();
-        if (!fadeOut && time.getTimeEl()/ SECONDS_PER_GAME_HOUR > 11) drawShadeOverlay((time.getTimeEl() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR)); // Added code
+        if (!fadeOut && time.getTimeElapsed()/ SECONDS_PER_GAME_HOUR > 11) drawShadeOverlay((time.getTimeElapsed() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR)); // Added code
         fadeOutStep(delta);
     }
 
@@ -441,7 +441,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * Renders the UI elements of the game.
      */
     private void drawUIElements(){
-        String counterString = String.format("Recreation Activities done: " + recActivity + "\nStudy hours: " + studyHours + "\nMeals Eaten: " + mealCount, dayNum, time.getTimeEl() );
+        String counterString = String.format("Recreation Activities done: " + recActivity + "\nStudy hours: " + studyHours + "\nMeals Eaten: " + mealCount, dayNum, time.getTimeElapsed() );
         game.batch.setProjectionMatrix(game.defaultCamera.combined);
         if (showMenu) drawDurationMenu();
         game.batch.begin();
@@ -478,7 +478,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     private int getTime() {
         // Calculate the current hour in game time
-        int hoursPassed = (int)(time.getTimeEl() / SECONDS_PER_GAME_HOUR);
+        int hoursPassed = (int)(time.getTimeElapsed() / SECONDS_PER_GAME_HOUR);
         return 8 + hoursPassed; // Starts at 08:00
     }
 
