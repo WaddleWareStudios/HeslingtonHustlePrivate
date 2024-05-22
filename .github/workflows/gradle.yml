@@ -28,16 +28,14 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
-    
-    # - name: change gradle wrapper permissions
-    #   run: chmod +x ./gradlew
+  
 
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Build with gradle
       uses: gradle/gradle-build-action@v3.3.2
       with:
-        arguments: dist jacocoTestReport  
+        arguments: dist jacocoTestReport --stacktrace --info --scan
     - name: Upload runnable JAR
       uses: actions/upload-artifact@v4.3.3
       with:
