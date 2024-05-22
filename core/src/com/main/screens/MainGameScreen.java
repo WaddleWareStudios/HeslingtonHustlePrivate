@@ -769,16 +769,16 @@ public class MainGameScreen implements Screen, InputProcessor {
     // Start of added code
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.SEMICOLON) { // keybind for devhack to skip day and add to score
-            skipDayAddScore();
-            return true;
-        }
-
-        if (keycode == Input.Keys.SLASH) {
-//            game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, dailyScore.getStreaks()); // Skip to the end screen
-            game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, "WaddleWare Representative\nProgrammer\nAthlete\nEarly Nights\nAll Rounder\nDaily Routine\n"); // Skip to the end screen
-            return true;
-        }
+//        if (keycode == Input.Keys.SEMICOLON) { // keybind for devhack to skip day and add to score
+//            skipDayAddScore();
+//            return true;
+//        }
+//
+//        if (keycode == Input.Keys.SLASH) {
+////            game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, dailyScore.getStreaks()); // Skip to the end screen
+//            game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, "WaddleWare Representative\nProgrammer\nAthlete\nEarly Nights\nAll Rounder\nDaily Routine\n"); // Skip to the end screen
+//            return true;
+//        }
         // End of added code
         return false;
     }
