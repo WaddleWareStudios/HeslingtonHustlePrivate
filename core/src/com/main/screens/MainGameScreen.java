@@ -45,19 +45,19 @@ public class MainGameScreen implements Screen, InputProcessor {
     // Added Code //
     private final Score dailyScore;
     private boolean hasFailed;
+    private final EnergyTexture energy;
+    private final Time time;
     // Added Code //
 
     // Non-final attributes
-    private Texture energyBar;
     private float counterBackgroundY, counterBackgroundX, counterBackgroundWidth, counterBackgroundHeight;
     private float popupMenuWidth, popupMenuHeight;
     private float durationMenuBackgroundX, durationMenuBackgroundY; // Added code
     private float durationMenuBackgroundWidth, durationMenuBackgroundHeight; // Added code
     private float durationTextY, menuTitleY, hoursLabelY;
-    private float energyBarY, energyBarX, energyBarWidth, energyBarHeight;
     private String activity, popupMenuType;
-    private int energyCounter, duration, dayNum, recActivity, studyHours, mealCount, currentHour, totalScore; // Added code
-    private float timeElapsed, fadeTime, minShade;
+    private int duration, dayNum, recActivity, studyHours, mealCount, totalScore; // Added code
+    private float fadeTime, minShade;
     private boolean fadeOut, lockTime, lockMovement, lockPopup, resetPos, popupVisible, showMenu;
 
     /**
@@ -69,6 +69,7 @@ public class MainGameScreen implements Screen, InputProcessor {
     public MainGameScreen(Main game) {
         this.game = game;
         this.shader = new Color(0.5f, 0.5f, 0.5f, 1);
+        this.time = new Time();
 
         // Initialize final Texture objects
         this.menuButton = new Texture("menu_buttons/menu_icon.png");
@@ -87,15 +88,13 @@ public class MainGameScreen implements Screen, InputProcessor {
         this._durationUp = new Button(); // Added code
         this._durationDown = new Button(); // Added code
         this._menuBack = new Button(); // Added code
+        this.energy = new EnergyTexture(game);
 
         // Initialize non-final attributes
         this.activity = "";
         this.popupMenuType = "";
-        this.energyCounter = 10;
         this.duration = 1;
         this.dayNum = 1;
-        this.timeElapsed = 0f;
-        this.currentHour = 10;
         this.fadeTime = 0;
         this.minShade = 0;
         this.fadeOut = this.lockTime = this.lockMovement = this.lockPopup = this.resetPos = this.popupVisible = this.showMenu = false;
@@ -114,7 +113,6 @@ public class MainGameScreen implements Screen, InputProcessor {
         this.popupFont = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
         this.durationFont = new BitmapFont(Gdx.files.internal("font/WhitePeaberry.fnt"));
         this.shapeRenderer = new ShapeRenderer();
-        this.energyBar = setEnergyBar();
 
         this.initDimensions(); // Added code
         this.popupFont.getData().setScale(0.4f, 0.4f);
@@ -159,16 +157,12 @@ public class MainGameScreen implements Screen, InputProcessor {
                 150 * scaleX,
                 75 * scaleY
         );
-        energyBarWidth = 200 * scaleX;
-        energyBarHeight = 64 * scaleY;
         counterBackgroundWidth = 370 * scaleX;
         counterBackgroundHeight = 150 * scaleY;
         durationMenuBackgroundWidth = 500 * scaleX;
         durationMenuBackgroundHeight = 500 * scaleY;
         font.getData().setScale(scaleX, scaleY);
         durationFont.getData().setScale(3f * scaleX, 3f * scaleY);
-        energyBarX = 30 * scaleX + this._menu.width();
-        energyBarY = screenHeight - energyBarHeight - 10 * scaleY;
         counterBackgroundX = screenWidth - counterBackgroundWidth;
         counterBackgroundY = screenHeight - counterBackgroundHeight;
         durationMenuBackgroundX = screenWidth/2f - durationMenuBackgroundWidth/2f;
@@ -184,6 +178,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float deltaTime) {
+        assert deltaTime > 0;
         if (!lockMovement) player.update(deltaTime); // Added code
         if (!lockTime) updateGameTime(deltaTime); // Update the game clock // Added code
 
@@ -264,6 +259,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param posY The Y position of the menu option.
      */
     private void isHovering(float posX, float posY){
+        assert posX > 0 && posY > 0;
         int mouseX = Gdx.input.getX();
         int mouseY = game.screenHeight - Gdx.input.getY();
         Vector3 menuOpt = camera.project(new Vector3(posX, posY, 0));
@@ -283,9 +279,10 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param shadeOption Determines the shade of the menu option.
      */
     private void drawMenuOption(float posX, float posY, String text, int shadeOption){
+        assert posX > 0 && posY > 0 && text != null && shadeOption > -1  && shadeOption < 3;
         if (shadeOption == 0) isHovering(posX, posY);
         else if (shadeOption == 1) game.batch.setColor(Color.WHITE);
-        else if (shadeOption == 2) game.batch.setColor(shader);
+        else game.batch.setColor(shader);
         GlyphLayout layout = new GlyphLayout();
         layout.setText(popupFont, text);
         game.batch.draw(popupMenu, posX, posY, popupMenuWidth, popupMenuHeight);
@@ -342,7 +339,7 @@ public class MainGameScreen implements Screen, InputProcessor {
                 break;
             case "Goodricke_door":
                 int shadeOption;
-                if (currentHour >= 20) {
+                if (time.getTimeHours() >= 20) {
                     popupVisible = true;
                     shadeOption = 0;
                 } else {
@@ -393,7 +390,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         lockPopup = true;
         showMenu = false;
         this.resetPos = resetPos;
-        minShade = timeElapsed/ SECONDS_PER_GAME_HOUR > 11 ? (timeElapsed - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR) : 0; // Added code
+        minShade = time.getTimeElapsed()/ SECONDS_PER_GAME_HOUR > 11 ? (time.getTimeElapsed() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR) : 0; // Added code
     }
 
     /**
@@ -401,6 +398,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void fadeOutStep(float delta){
+        assert delta > 0;
         if (fadeOut){
             if (fadeTime == 0) fadeTime = minShade;
             if (fadeTime <= 1) {
@@ -427,6 +425,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void drawWorldElements(float delta){
+        assert delta > 0;
         gameMap.update(delta);
         gameMap.render();
         game.batch.setProjectionMatrix(camera.combined);
@@ -434,7 +433,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         game.batch.draw(player.getCurrentFrame(), player.worldX, player.worldY, Player.SPRITE_X, Player.SPRITE_Y); // Added code
         if (!lockPopup) drawPopUpMenu();
         game.batch.end();
-        if (!fadeOut && timeElapsed/ SECONDS_PER_GAME_HOUR > 11) drawShadeOverlay((timeElapsed - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR)); // Added code
+        if (!fadeOut && time.getTimeElapsed()/ SECONDS_PER_GAME_HOUR > 11) drawShadeOverlay((time.getTimeElapsed() - 11 * SECONDS_PER_GAME_HOUR)/(GAME_DAY_LENGTH_IN_SECONDS - 11 * SECONDS_PER_GAME_HOUR)); // Added code
         fadeOutStep(delta);
     }
 
@@ -442,12 +441,12 @@ public class MainGameScreen implements Screen, InputProcessor {
      * Renders the UI elements of the game.
      */
     private void drawUIElements(){
-        String counterString = String.format("Recreation Activities done: " + recActivity + "\nStudy hours: " + studyHours + "\nMeals Eaten: " + mealCount, dayNum, timeElapsed );
+        String counterString = String.format("Recreation Activities done: " + recActivity + "\nStudy hours: " + studyHours + "\nMeals Eaten: " + mealCount, dayNum, time.getTimeElapsed() );
         game.batch.setProjectionMatrix(game.defaultCamera.combined);
         if (showMenu) drawDurationMenu();
         game.batch.begin();
         game.batch.draw(menuButton, _menu.x(), _menu.y(), _menu.width(), _menu.height()); // Added code
-        game.batch.draw(energyBar, energyBarX, energyBarY, energyBarWidth, energyBarHeight);
+        energy.draw(game);
         game.batch.draw(counterBackground, counterBackgroundX, counterBackgroundY, counterBackgroundWidth, counterBackgroundHeight);
         font.draw(game.batch, counterString, game.screenWidth - 320 * game.scaleFactorX, game.screenHeight - 40 * game.scaleFactorY);
         game.batch.end();
@@ -458,12 +457,12 @@ public class MainGameScreen implements Screen, InputProcessor {
      * @param delta The time elapsed since the last frame.
      */
     private void updateGameTime(float delta) {
+        assert delta > 0;
         // Start of added code
-        timeElapsed += delta;
-        currentHour = this.getTime();
+        time.incTimeElapsed(delta);
 
         // Ensure the hour cycles through the active hours correctly (08:00 to 00:00)
-        if (currentHour >= 24) { // If it reaches 00:00, reset to 08:00 the next day
+        if (time.getTimeHours() >= 24) { // If it reaches 00:00, reset to 08:00 the next day
             if (dayNum == 7) {
                 totalScore += dailyScore.checkStreaks(); // Add bonus points from achieving streaks
                 game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, dailyScore.getStreaks());
@@ -479,7 +478,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     private int getTime() {
         // Calculate the current hour in game time
-        int hoursPassed = (int)(timeElapsed / SECONDS_PER_GAME_HOUR);
+        int hoursPassed = (int)(time.getTimeElapsed() / SECONDS_PER_GAME_HOUR);
         return 8 + hoursPassed; // Starts at 08:00
     }
 
@@ -494,8 +493,11 @@ public class MainGameScreen implements Screen, InputProcessor {
         }
         if (!hasFailed) {
             totalScore += dailyScore.calculateScore();
-            dailyScore.resetDailyCounters();
         }
+        else {
+            totalScore = 0;
+        }
+        dailyScore.resetDailyCounters();
     }
     // End of added Code
 
@@ -504,14 +506,9 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     private void resetDay(){
         executeFadeOut(true);
-        currentHour = 8;
         dayNum++;
-        timeElapsed = 0;
-        energyCounter += 4;
-        if (energyCounter > 10) energyCounter = 10;
-        energyBar.dispose();
-        energyBar = setEnergyBar();
-
+        energy.increaseEnergy(4);
+        time.reset();
         addDailyScore(); // Added code
     }
 
@@ -520,22 +517,10 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     private void drawGameTime() {
         // Adjust the format if you want to display minutes or seconds
-        String timeString = String.format("Day: %d       Time: %02d:00", dayNum, currentHour % 24);
+        String timeString = String.format("Day: %d       Time: %02d:00", dayNum, time.getTimeHours() % 24);
         game.batch.begin();
         font.draw(game.batch, timeString, game.screenWidth - 320 * game.scaleFactorX, game.screenHeight - 15 * game.scaleFactorY);
         game.batch.end();
-    }
-
-    /**
-     * Sets the texture for the energy bar based on the current energy level.
-     * @return The texture of the current energy bar.
-     */
-    public Texture setEnergyBar() {
-        if (energyCounter > 0) {
-            return new Texture("energy/energy_" + energyCounter + ".png");
-        } else {
-            return new Texture("energy/energy_0.png");
-        }
     }
 
     /**
@@ -549,6 +534,7 @@ public class MainGameScreen implements Screen, InputProcessor {
      */
     @Override
     public boolean touchDown(int touchX, int touchY, int pointer, int button){
+        assert touchX > 0 && touchY > 0 && touchX <= game.screenWidth && touchY <= game.screenHeight;
         touchY = game.screenHeight - touchY;
 
         if (_menu.isClicked(touchX, touchY)) { // Added code
@@ -578,12 +564,10 @@ public class MainGameScreen implements Screen, InputProcessor {
                         showMenu = false;
                         lockMovement = fadeOut;
                         studyHours += duration;
-                        if (energyCounter > (duration+1)/2) energyCounter -= (duration+1)/2;
-                        energyBar.dispose();
-                        energyBar = setEnergyBar();
+                        if (energy.getEnergy() > (duration+1)/2) energy.decreaseEnergy((duration+1)/2);
 
                         // Start of added code
-                        timeElapsed += duration * SECONDS_PER_GAME_HOUR;
+                        time.incTimeElapsed( duration * SECONDS_PER_GAME_HOUR);
                         dailyScore.study(duration, getDoorTouching());
                         // End of added Code
 
@@ -611,18 +595,16 @@ public class MainGameScreen implements Screen, InputProcessor {
                     }
                     else if (_activity.isClicked(touchX,touchY)) {
                         game.gameData.buttonClickedSoundActivate();
-                        if (energyCounter >= duration) {
+                        if (energy.getEnergy() >= duration) {
                             executeFadeOut(false);
                             showMenu = false;
                             lockMovement = fadeOut;
                             recActivity++;
-                            energyCounter -= duration;
-                            energyBar.dispose();
-                            energyBar = setEnergyBar();
-                            timeElapsed += duration * SECONDS_PER_GAME_HOUR;
+                            energy.decreaseEnergy(duration);
+                            time.incTimeElapsed( duration * SECONDS_PER_GAME_HOUR);
 
                             // Added Code //
-                            dailyScore.doRecActivity(getDoorTouching());
+                            dailyScore.doRecActivity(duration, getDoorTouching());
                             // Added Code //
 
                             duration = 1;
@@ -653,7 +635,9 @@ public class MainGameScreen implements Screen, InputProcessor {
                         // Start of added Code
                         if (dayNum == 7) {
                             addDailyScore();
-                            totalScore += dailyScore.checkStreaks(); // Add bonus points from achieving streaks
+                            if (!hasFailed) {
+                                totalScore += dailyScore.checkStreaks(); // Add bonus points from achieving streaks
+                            }
                             game.screenManager.setScreen(ScreenType.END_SCREEN, totalScore, dailyScore.getStreaks());
                         } else {
                             dailyScore.incrementSleep(); //increments count for number of early nights
@@ -691,13 +675,9 @@ public class MainGameScreen implements Screen, InputProcessor {
                     else if (touchX >= eatOpt.x && touchX <= eatOpt.x + popupMenuWidth * zoom && touchY >= eatOpt.y && touchY <= eatOpt.y + popupMenuHeight * zoom) {
                         game.gameData.buttonClickedSoundActivate();
                         game.gameData.eatingSoundActivate();
-                        energyCounter += 3;
+                        energy.increaseEnergy(3);
                         mealCount++;
                         dailyScore.eat(getTime()); // Added code
-
-                        if (energyCounter > 10) energyCounter = 10;
-                        energyBar.dispose();
-                        energyBar = setEnergyBar();
                     }
                     break;
 
@@ -748,7 +728,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int i, int i1) {
-        initDimensions(); // Added code
+        initDimensions(); energy.onResize(game);// Added code
     }
 
     @Override
@@ -779,7 +759,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         menuStudyButton.dispose();
         menuSleepButton.dispose();
         menuGoButton.dispose();
-        energyBar.dispose();
+        energy.disposeTexture();
         player.dispose();
         font.dispose();
         popupFont.dispose();

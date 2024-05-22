@@ -89,6 +89,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
+        assert delta > 0;
         if (exitFlag) return;
         ScreenUtils.clear(0.3f, 0.55f, 0.7f, 1);
         game.batch.setProjectionMatrix(game.defaultCamera.combined);
@@ -118,6 +119,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDown(int touchX, int touchY, int pointer, int button) {
+        assert touchX > 0 && touchY > 0 && touchY <= game.screenHeight && touchX <= game.screenWidth;
         touchY = game.screenHeight - touchY;
 
         if (touchX >= x && touchX <= x + playButtonWidth &&

@@ -21,7 +21,7 @@ public class Score {
     private static final int MEAL_INTERVAL_BONUS = 5;
 
     // Constants for streaks
-    private static final int NUM_LOCATIONS = 7;
+    private static final int NUM_LOCATIONS = 6;
 
     private final Set<String> studyLocations; // Track different study locations
     private final Set<String> recreationLocations; // Track different recreational locations visited
@@ -89,8 +89,8 @@ public class Score {
      * Adds a recreational activity and the location where it took place.
      * @param location The location where the recreational activity was done.
      */
-    public void doRecActivity(String location) {
-        recreationCount++;
+    public void doRecActivity(int hours, String location) {
+        recreationCount += hours;
         recreationLocations.add(location);
     }
 
@@ -206,7 +206,7 @@ public class Score {
         }
         if (allRounder) {
             streaks += "All Rounder\n";
-            streakBonus += 3;
+            streakBonus += 5;
         }
         if (daysVisitAll == 7) {
             streaks += "Daily Routine\n";
@@ -257,6 +257,8 @@ public class Score {
         return studyCount;
     }
 
+    public Set<String> getStudyLocations() { return studyLocations; }
+
     /**
      * Returns the current number of meals eaten.
      * @return The current number of meals eaten.
@@ -265,6 +267,8 @@ public class Score {
         return mealCount;
     }
 
+    public List<Integer> getMealTimes() { return mealTimes; }
+
     /**
      * Returns the current number of recreational activities completed.
      * @return The current number of recreational activities completed.
@@ -272,6 +276,8 @@ public class Score {
     public int getRecreationCount() {
         return recreationCount;
     }
+
+    public Set<String> getRecreationLocations() { return recreationLocations; }
 
     /**
      * Returns the missedStudy boolean

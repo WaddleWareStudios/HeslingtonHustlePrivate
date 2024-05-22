@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * The class provides methods for reading, writing, and updating the leaderboard data.
  */
 public class Leaderboards {
-    private final static String FILE_NAME = "leaderboard.csv";
+    private final String fileName;
     private final static int MAX_ENTRIES = 10;
     private final Entry[] entries;
     private int entryCount;
@@ -43,6 +43,7 @@ public class Leaderboards {
         Entry(String name, int score) {
             this.name = name;
             this.score = score;
+
         }
 
         /**
@@ -63,15 +64,16 @@ public class Leaderboards {
      * Constructs a new Leaderboards instance and initialises the entries array.
      * It reads the existing leaderboard data from the CSV file if available.
      */
-    public Leaderboards() {
+    public Leaderboards(String fileName) {
         this.entries = new Entry[MAX_ENTRIES];
         this.entryCount = 0;
-        File file = new File(FILE_NAME);
+        this.fileName = fileName;
+        File file = new File(fileName);
 
         try {
             // Attempt to create the file only if it doesn't exist
             if (!file.exists() && !file.createNewFile()) {
-                logger.log(Level.WARNING, "Failed to create new file: {0}", FILE_NAME);
+                logger.log(Level.WARNING, "Failed to create new file: {0}", fileName);
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error while creating or opening file", e);
@@ -85,10 +87,10 @@ public class Leaderboards {
      * Splits each line into name and score, Creates a new Entry object for each pair and adds it to the entries array.
      */
     private void readFromSaved() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             // Read each line from file
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null && entryCount < MAX_ENTRIES) {
                 if (line.isEmpty()) {
                     break;
                 }
@@ -109,8 +111,8 @@ public class Leaderboards {
     /**
      * Writes the current entries array to the CSV file.
      */
-    private void writeToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+    public void writeToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < entryCount; i++) {
                 Entry entry = entries[i];
                 writer.write(entry.name + "," + entry.score);

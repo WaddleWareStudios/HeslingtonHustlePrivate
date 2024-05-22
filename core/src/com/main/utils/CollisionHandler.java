@@ -32,6 +32,7 @@ public class CollisionHandler {
      * @param scaleY The scale factor along the Y-axis for the object.
      */
     public CollisionHandler(TiledMap tiledMap, int tileWidth, int tileHeight, float objWidth, float objHeight, float scaleX, float scaleY){
+        assert tiledMap != null;
         this.tiledMap = tiledMap;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
