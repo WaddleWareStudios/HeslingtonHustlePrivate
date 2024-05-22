@@ -34,7 +34,8 @@ public class Time {
      * @param toAdd the number of seconds to add to the elapsed time
      */
     public void incTimeElapsed(float toAdd) {
-        timeElapsed += toAdd;
+        if (toAdd>0){
+        timeElapsed += toAdd;}
     }
 
     /**
