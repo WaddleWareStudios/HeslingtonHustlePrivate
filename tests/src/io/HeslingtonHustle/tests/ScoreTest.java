@@ -32,7 +32,7 @@ public class ScoreTest {
     }
 
     /**
-     * Tests studying.
+     * Tests study hours and locations are successfully recorded ready for score calculation
      */
     @Test
     public void testStudy() {
@@ -44,7 +44,7 @@ public class ScoreTest {
     }
 
     /**
-     * Tests eating.
+     * Tests eating hours and count are successfully recorded ready for score calculation
      */
     @Test
     public void testEat() {
@@ -56,7 +56,7 @@ public class ScoreTest {
     }
 
     /**
-     * Tests recreational activity.
+     * Tests recreational activity hours and locations are successfully recorded ready for score calculation.
      */
     @Test
     public void testDoRecActivity() {
@@ -97,7 +97,7 @@ public class ScoreTest {
     }
 
     /**
-     * Tests multiple activities
+     * Tests multiple activities locations and counts are successfully recorded.
      */
     @Test
     public void testMultipleActivities() {
