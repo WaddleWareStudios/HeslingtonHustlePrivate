@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+
 /**
  * Represents an entity in the game world.
  * This class extends {@link Sprite} and includes additional attributes for managing the entity's
